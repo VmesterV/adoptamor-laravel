@@ -1,0 +1,77 @@
+/* resources/css/app.css */
+
+/* 1. VARIABLES */
+:root {
+    --font-main: 'Nunito', sans-serif;
+    --color-bg: #FDF6F0;
+    --color-surface: #FFFFFF;
+    --color-primary: #FFB6C1;
+    --color-secondary: #AED9E0;
+    --color-accent: #B8E0D2;
+    --color-text: #4E4E4E;
+    --color-border: #EAEAEA;
+}
+
+[data-theme="dark"] {
+    --color-bg: #2C3333;
+    --color-surface: #393E46;
+    --color-primary: #9A86A4;
+    --color-secondary: #7A86B6;
+    --color-text: #E0E0E0;
+    --color-border: #4E4E4E;
+}
+
+/* 2. BASE */
+body {
+    font-family: var(--font-main);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* 3. UTILIDADES DE COLOR (Reemplazan a los style="") */
+.text-primary { color: var(--color-primary) !important; }
+.text-secondary { color: var(--color-secondary) !important; }
+.text-body { color: var(--color-text) !important; }
+
+.bg-primary { background-color: var(--color-primary) !important; }
+.bg-secondary { background-color: var(--color-secondary) !important; }
+.bg-surface { background-color: var(--color-surface) !important; }
+.bg-main { background-color: var(--color-bg) !important; }
+
+.border-custom { border-color: var(--color-border) !important; }
+.border-primary { border-color: var(--color-primary) !important; }
+
+/* 4. COMPONENTES */
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+}
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.input-custom {
+    border-color: var(--color-border);
+    background-color: transparent;
+}
+.input-custom:focus {
+    /* Esto permite cambiar el color del anillo de Tailwind */
+    --tw-ring-color: var(--color-secondary); 
+}
+
+/* 5. INTERFAZ */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+.cart-open { transform: translateX(0) !important; }
+.fade-in { opacity: 1 !important; pointer-events: auto !important; }
+
+/* Radio Buttons personalizados */
+input[type="radio"]:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    
+    color: var(--color-primary);
+}
