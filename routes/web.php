@@ -23,8 +23,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/publicar/mascota', [PublishController::class, 'storePet'])->name('publish.pet.store');
     Route::post('/publicar/producto', [PublishController::class, 'storeProduct'])->name('publish.product.store');
 
-    // Adopción (ESTA ES LA QUE TE FALTA)
-    Route::post('/adoptar/{id}', [AdoptionController::class, 'store'])->name('adopt.store'); // <--- AGREGAR ESTA LÍNEA
+    // Adopción
+    Route::post('/adoptar/{id}', [AdoptionController::class, 'store'])->name('adopt.store');
 
     // Carrito de compra
     Route::post('/checkout', [StoreController::class, 'checkout'])->name('checkout');
@@ -42,6 +42,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/venta/{id}/cancelar', [PublishController::class, 'cancelSale'])->name('sale.cancel');
     Route::post('/adopcion/{id}/aprobar', [PublishController::class, 'approveAdoption'])->name('adoption.approve');
     Route::post('/adopcion/{id}/rechazar', [PublishController::class, 'rejectAdoption'])->name('adoption.reject');
+
+    Route::get('/mis-pedidos', [StoreController::class, 'myOrders'])->name('orders.mine');
 
 });
 

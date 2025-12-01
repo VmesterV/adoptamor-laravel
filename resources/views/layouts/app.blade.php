@@ -13,6 +13,8 @@
         <meta name="session-error" content="{{ session('toast_error') }}">
     @endif
 
+    <meta name="orders-url" content="{{ route('orders.mine') }}">
+
     <title>AdoptAmor</title>
     
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
@@ -123,61 +125,99 @@
 
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-surface shadow-2xl transform translate-x-full transition-transform duration-300 z-50 border-l border-custom flex flex-col">
         
-        <div class="p-4 border-b border-custom flex justify-between items-center bg-main">
-            <h2 class="text-lg font-bold flex items-center">
-                <i class="fa-solid fa-bag-shopping mr-2 text-primary"></i> Tu Carrito
-            </h2>
-            <div class="flex items-center gap-3">
-                <button onclick="clearCart()" class="text-xs font-bold underline hover:no-underline text-gray-500 hover:text-red-500">Vaciar</button>
-                <button onclick="toggleCart()" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-times text-xl"></i></button>
+        <!-- PESTAÑAS SUPERIORES -->
+        <div class="flex border-b border-custom">
+            <button onclick="switchSidebarTab('cart')" id="tab-cart" class="flex-1 py-4 font-bold text-center border-b-2 border-transparent text-gray-400 hover:bg-gray-50 transition hover:text-gray-600">
+                <i class="fa-solid fa-cart-shopping mr-2"></i> Tu Carrito
+            </button>
+            <button onclick="switchSidebarTab('tracking')" id="tab-tracking" class="flex-1 py-4 font-bold text-center border-b-2 border-transparent text-gray-400 hover:bg-gray-50 transition hover:text-gray-600">
+                <i class="fa-solid fa-box-open mr-2"></i> Seguimiento
+            </button>
+            <button onclick="toggleCart()" class="px-4 text-gray-400 hover:text-red-500 transition">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- ====================== -->
+        <!-- VISTA 1: CARRITO -->
+        <!-- ====================== -->
+        <div id="sidebar-view-cart" class="flex-grow flex flex-col h-full overflow-hidden transition-opacity duration-300">
+            <!-- Header acciones -->
+            <div class="bg-surface p-3 bg-gray-50 border-b border-custom flex justify-end">
+                <button onclick="clearCart()" class="text-xs font-bold text-red-400 hover:text-red-600 underline">Vaciar todo</button>
+            </div>
+
+            <!-- Lista Items -->
+            <div id="cart-items" class="flex-grow overflow-y-auto p-4 space-y-4 bg-surface">
+                <!-- Se llena vía JS -->
+            </div>
+
+            <!-- Checkout Form -->
+            <div class="p-5 bg-surface border-t border-custom shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+                @auth
+                    <div id="checkout-form" class="space-y-4 text-sm">
+                        <!-- Opciones de Entrega -->
+                        <div>
+                            <label class="font-bold block mb-2" style="color: var(--color-text)">Método de Entrega</label>
+                            <div class="flex gap-2">
+                                <label class="flex items-center border border-custom px-3 py-2 rounded-lg cursor-pointer w-1/2 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                    <input type="radio" name="delivery_type" value="pickup" checked onchange="toggleAddress(false)" class="mr-2 focus:ring-0"> Recojo
+                                </label>
+                                <label class="flex items-center border border-custom px-3 py-2 rounded-lg cursor-pointer w-1/2 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                    <input type="radio" name="delivery_type" value="delivery" onchange="toggleAddress(true)" class="mr-2 focus:ring-0"> Delivery
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Dirección -->
+                        <div id="address-field" class="hidden">
+                            <input type="text" id="shipping_address" placeholder="Dirección exacta..." class="w-full border border-custom rounded-lg p-2 bg-transparent focus:ring-1 focus:ring-pink-300 outline-none">
+                        </div>
+
+                        <!-- Pago -->
+                        <div>
+                            <label class="font-bold block mb-2" style="color: var(--color-text)">Método de Pago</label>
+                            <div class="flex gap-2">
+                                <label class="flex items-center border border-custom px-3 py-2 rounded-lg cursor-pointer w-1/2 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                    <input type="radio" name="payment_method" value="card" checked class="mr-2 focus:ring-0"> Tarjeta
+                                </label>
+                                <label class="flex items-center border border-custom px-3 py-2 rounded-lg cursor-pointer w-1/2 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                    <input type="radio" name="payment_method" value="yape" class="mr-2 focus:ring-0"> Yape
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="flex justify-between font-bold text-lg pt-2 border-t border-dashed border-custom mt-2">
+                            <span>Total:</span>
+                            <span id="cart-total" style="color: var(--color-primary)">S/ 0.00</span>
+                        </div>
+
+                        <button onclick="processCheckout()" class="w-full text-white font-bold py-3 rounded-xl hover:opacity-90 transition shadow-lg flex justify-center items-center" style="background-color: var(--color-primary)">
+                            <i class="fa-solid fa-credit-card mr-2"></i> Pagar Ahora
+                        </button>
+                    </div>
+                @else
+                    <div class="text-center py-4">
+                        <p class="text-gray-500 mb-2">Inicia sesión para finalizar tu compra</p>
+                        <button onclick="openModal('login-modal')" class="w-full bg-gray-800 text-white font-bold py-2 rounded-lg hover:bg-gray-900 transition">Ingresar</button>
+                    </div>
+                @endauth
             </div>
         </div>
 
-        <div id="cart-items" class=" bg-surface flex-grow overflow-y-auto p-4 space-y-4"></div>
-
-        <div class="p-5 bg-surface border-t border-custom shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
-            @auth
-                <div id="checkout-form" class="space-y-4 text-sm ">
-                    <div>
-                        <label class="font-bold block mb-2 text-body">Método de Entrega</label>
-                        <div class="flex gap-2">
-                            <label class="flex items-center border border-custom px-3 py-2 rounded-lg cursor-pointer w-1/2 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                <input type="radio" name="delivery_type" value="pickup" checked onchange="toggleAddress(false)" class="mr-2 focus:ring-0"> Recojo
-                            </label>
-                            <label class="flex items-center border border-custom px-3 py-2 rounded-lg cursor-pointer w-1/2 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                <input type="radio" name="delivery_type" value="delivery" onchange="toggleAddress(true)" class="mr-2 focus:ring-0"> Delivery
-                            </label>
-                        </div>
-                    </div>  
-                    <div id="address-field" class="hidden">
-                        <input type="text" id="shipping_address" placeholder="Dirección exacta..." class="w-full border border-custom rounded-lg p-2 bg-transparent focus:ring-1 focus:ring-pink-300 outline-none">
-                    </div>
-                    <div>
-                        <label class="font-bold block mb-2 text-body">Método de Pago</label>
-                        <div class="flex gap-2">
-                            <label class="flex items-center border border-custom px-3 py-2 rounded-lg cursor-pointer w-1/2 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                <input type="radio" name="payment_method" value="card" checked class="mr-2 focus:ring-0"> Tarjeta
-                            </label>
-                            <label class="flex items-center border border-custom px-3 py-2 rounded-lg cursor-pointer w-1/2 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                <input type="radio" name="payment_method" value="yape" class="mr-2 focus:ring-0"> Yape
-                            </label>
-                        </div>
-                    </div>
-                    <div class="flex justify-between font-bold text-lg pt-2 border-t border-dashed border-custom mt-2">
-                        <span>Total:</span>
-                        <span id="cart-total" class="text-primary">S/ 0.00</span>
-                    </div>
-                    <button onclick="processCheckout()" class="w-full text-white font-bold py-3 rounded-xl hover:opacity-90 transition shadow-lg flex justify-center items-center btn-primary">
-                        <i class="fa-solid fa-credit-card mr-2"></i> Pagar Ahora
-                    </button>
+        <!-- ====================== -->
+        <!-- VISTA 2: SEGUIMIENTO -->
+        <!-- ====================== -->
+        <div id="sidebar-view-tracking" class="flex-grow flex flex-col h-full overflow-hidden transition-opacity duration-300">
+            <div id="tracking-list" class="flex-grow overflow-y-auto p-4 space-y-4">
+                <!-- Cargando... -->
+                <div class="text-center mt-10 text-gray-400">
+                    <i class="fa-solid fa-circle-notch fa-spin text-2xl"></i>
                 </div>
-            @else
-                <div class="text-center py-4">
-                    <p class="text-gray-500 mb-2">Inicia sesión para finalizar tu compra</p>
-                    <button onclick="openModal('login-modal')" class="w-full bg-gray-800 text-white font-bold py-2 rounded-lg hover:bg-gray-900 transition">Ingresar</button>
-                </div>
-            @endauth
+            </div>
         </div>
+
     </div>
 
     <div id="login-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-backdrop p-4">
@@ -243,12 +283,14 @@
                         <div class="grid grid-cols-1 gap-3">
                             <input type="text" name="name" placeholder="Nombre completo" required class="w-full p-2 text-sm border border-custom rounded-lg bg-transparent focus:ring-1 outline-none">
                             <input type="email" name="email" placeholder="Correo" required class="w-full p-2 text-sm border border-custom rounded-lg bg-transparent focus:ring-1 outline-none">
+                            <input type="tel" name="phone" placeholder="Celular / WhatsApp" required class="w-full p-2 text-sm border border-custom rounded-lg bg-transparent focus:ring-1 focus:ring-pink-300 outline-none transition">    
                             <div class="grid grid-cols-2 gap-2">
                                 <input type="password" name="password" placeholder="Contraseña" required class="w-full p-2 text-sm border border-custom rounded-lg bg-transparent focus:ring-1 outline-none">
                                 <input type="password" name="password_confirmation" placeholder="Confirmar" required class="w-full p-2 text-sm border border-custom rounded-lg bg-transparent focus:ring-1 outline-none">
                             </div>
                         </div>
                         <div id="address-fields" class="hidden space-y-3 pt-2 border-t border-custom mt-2">
+                            <input type="url" name="photo_url" placeholder="URL Logo / Foto Perfil (https://...)" class="w-full p-2 text-sm border border-custom rounded-lg bg-transparent">
                             <p class="text-xs font-bold text-gray-500 uppercase">Ubicación</p>
                             <div class="grid grid-cols-2 gap-2">
                                 <input type="text" name="department" id="input-dept" placeholder="Dpto" class="w-full p-2 text-sm border border-custom rounded-lg">

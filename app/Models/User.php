@@ -21,6 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'department',
+        'province',
+        'district',
+        'address',
+        'photo_url',
+        'phone', // <--- AGREGADO
     ];
 
     /**

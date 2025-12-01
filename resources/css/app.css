@@ -1,4 +1,4 @@
-/* resources/css/app.css */
+@import "tailwindcss";
 
 /* 1. VARIABLES */
 :root {
@@ -75,3 +75,4 @@ input[type="radio"]:checked {
     
     color: var(--color-primary);
 }
+    

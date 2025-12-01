@@ -151,4 +151,15 @@ class StoreController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
         }
     }
+
+    public function myOrders()
+    {
+        $orders = Order::where('user_id', Auth::id())
+                       ->with(['orderDetails.product.user'])
+                       ->orderBy('created_at', 'desc')
+                       ->get();
+
+        return response()->json($orders);
+    }
+
 }

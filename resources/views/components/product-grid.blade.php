@@ -56,13 +56,25 @@
                     </p>
                 </div>
 
-                <div class="flex items-center gap-3 pt-4 border-t border-custom mt-4">
-                    <img src="{{ $product->user->photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode($product->user->name) }}" class="w-10 h-10 rounded-full border border-custom object-cover">
-                    <div>
-                        <p class="text-xs text-body opacity-50 font-bold uppercase">Vendido por</p>
-                        <p class="text-sm font-bold text-body">{{ $product->user->name }}</p>
-                        <p class="text-xs text-body opacity-60">{{ $product->user->department }}, {{ $product->user->district }}</p>
-                    </div>
+                <div class="border-t border-custom pt-6">
+                    <h4 class="text-xs font-bold text-body opacity-50 uppercase tracking-wider mb-4">Publicado por</h4>
+                    <a href="https://wa.me/51{{ $product->user->phone }}?text=Hola {{ $product->user->name }}, me interesa el producto {{ $product->name }}." 
+                        target="_blank"
+                        class="flex items-center gap-4 group p-2 rounded-xl hover:bg-green-50 dark:hover:bg-green-900/20 transition cursor-pointer border border-transparent hover:border-green-200">
+                        
+                            <div class="relative">
+                                <img src="{{ $product->user->photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode($product->user->name) }}" class="w-10 h-10 rounded-full border border-gray-200 object-cover">
+                                <div class="absolute -bottom-1 -right-1 bg-green-500 text-white rounded-full p-0.5 text-[8px] border border-white">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <p class="font-bold text-gray-900 text-body group-hover:text-green-600 transition">{{ $product->user->name }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $product->user->address }}</p>
+                                <p class="text-[10px] text-green-500 font-bold mt-1">Clic para mas información del producto</p>
+                            </div>
+                        </a>
                 </div>
 
                 <button onclick="addToCart({

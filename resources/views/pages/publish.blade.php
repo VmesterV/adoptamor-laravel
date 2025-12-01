@@ -4,17 +4,12 @@
 <div class="max-w-7xl mx-auto py-12 px-4">
     
     <div class="text-center mb-10">
-        <h1 class="text-3xl font-bold text-gray-800">Panel de Gestión</h1>
-        <p class="text-gray-500 mt-2">Administra tu inventario, ventas y adopciones.</p>
+        <h1 class="text-body text-3xl font-bold text-gray-800">Panel de Gestión</h1>
+        <p class="text-body text-gray-500 mt-2">Administra tu inventario, ventas y adopciones.</p>
     </div>
-
-    <!-- ================================================= -->
-    <!-- SECCIÓN 1: BOTONES DE ACCIÓN (Lógica Adaptable) -->
-    <!-- ================================================= -->
     
     @php
         $isStoreOnly = Auth::user()->role === 'store';
-        // Si es tienda, usaremos grid-cols-1 (centrado). Si es refugio, grid-cols-2.
         $gridClass = $isStoreOnly ? 'grid-cols-1 max-w-2xl mx-auto' : 'grid-cols-1 md:grid-cols-2';
     @endphp
 
@@ -22,41 +17,37 @@
         
         <!-- Opción Mascota (Solo Refugios/Admin) -->
         @if(Auth::user()->role === 'shelter' || Auth::user()->role === 'admin')
-            <div onclick="openModal('modal-pet')" class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition cursor-pointer border border-gray-100 group text-center relative overflow-hidden h-full flex flex-col justify-center items-center">
+            <div onclick="openModal('modal-pet')" class="bg-surface p-8 rounded-2xl shadow-sm hover:shadow-xl transition cursor-pointer border border-gray-100 group text-center relative overflow-hidden h-full flex flex-col justify-center items-center">
                 <div class="absolute top-0 left-0 w-full h-2 bg-pink-400"></div>
                 <div class="bg-pink-50 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
                     <i class="fa-solid fa-paw text-2xl text-pink-500"></i>
                 </div>
-                <h2 class="text-xl font-bold text-gray-800">Publicar Mascota</h2>
+                <h2 class="text-body text-xl font-bold text-gray-800">Publicar Mascota</h2>
                 <p class="text-sm text-gray-400 mt-2">Busca un hogar para un rescatado</p>
             </div>
         @endif
 
         <!-- Opción Producto (Todos) -->
-        <div onclick="openModal('modal-product')" class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition cursor-pointer border border-gray-100 group text-center relative overflow-hidden h-full flex flex-col justify-center items-center">
+        <div onclick="openModal('modal-product')" class="bg-surface p-8 rounded-2xl shadow-sm hover:shadow-xl transition cursor-pointer border border-gray-100 group text-center relative overflow-hidden h-full flex flex-col justify-center items-center">
             <div class="absolute top-0 left-0 w-full h-2 bg-blue-400"></div>
             <div class="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
                 <i class="fa-solid fa-box-open text-2xl text-blue-500"></i>
             </div>
-            <h2 class="text-xl font-bold text-gray-800">Vender Producto</h2>
+            <h2 class="text-body text-xl font-bold text-gray-800">Vender Producto</h2>
             <p class="text-sm text-gray-400 mt-2">Publica accesorios o comida</p>
         </div>
     </div>
 
-
-    <!-- ================================================= -->
     <!-- SECCIÓN 2: PUBLICACIONES ACTIVAS -->
-    <!-- ================================================= -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-12">
+
+    <div class="bg-surface rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-12">
         <!-- Header con Buscador -->
-        <div class="p-6 border-b border-gray-100 bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
-            <h3 class="text-lg font-bold text-gray-700 flex items-center">
+        <div class="bg-surface p-6 border-b border-gray-100 bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
+            <h3 class="text-body text-lg font-bold text-gray-700 flex items-center">
                 <i class="fa-solid fa-layer-group mr-2 text-blue-400"></i> Publicaciones Activas
             </h3>
             
             <form action="{{ route('publish') }}" method="GET" class="flex w-full md:w-auto gap-2">
-                <!-- Mantener filtros de otras secciones ocultos para no perderlos al recargar es complejo sin JS, 
-                     así que usamos inputs simples que recargan la vista centrados en esta búsqueda -->
                 <div class="relative w-full md:w-64">
                     <input type="text" name="search_active" value="{{ request('search_active') }}" 
                            placeholder="Buscar en todo..." 
@@ -69,8 +60,8 @@
 
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
-                <thead class="bg-white text-gray-500 text-xs uppercase border-b border-gray-100">
-                    <tr>
+                <thead class="bg-surface text-gray-500 text-xs uppercase border-b border-gray-100">
+                    <tr class="text-body">
                         <th class="px-6 py-3 font-bold">Item</th>
                         <th class="px-6 py-3 font-bold">Detalle</th>
                         <th class="px-6 py-3 font-bold">Estado</th>
@@ -84,16 +75,16 @@
                         <td class="px-6 py-3 flex items-center gap-3">
                             <img src="{{ $prod->image_url }}" class="h-10 w-10 rounded object-cover border border-gray-200">
                             <div>
-                                <div class="font-bold text-gray-900">{{ $prod->name }}</div>
+                                <div class="text-body font-bold text-gray-900">{{ $prod->name }}</div>
                                 <span class="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded uppercase">Producto</span>
                             </div>
                         </td>
-                        <td class="px-6 py-3 text-gray-500 text-xs">Stock: {{ $prod->stock }} <br> S/ {{ $prod->price }}</td>
+                        <td class="text-body px-6 py-3 text-gray-500 text-xs">Stock: {{ $prod->stock }} <br> S/ {{ $prod->price }}</td>
                         <td class="px-6 py-3">
                             @if($prod->is_approved) <span class="text-green-600 font-bold text-xs bg-green-50 px-2 py-1 rounded">Aprobado</span>
                             @else <span class="text-yellow-600 font-bold text-xs bg-yellow-50 px-2 py-1 rounded">Pendiente</span> @endif
                         </td>
-                        <td class="px-6 py-3 text-gray-400 text-xs">{{ $prod->created_at->format('d/m/Y') }}</td>
+                        <td class="text-body px-6 py-3 text-gray-400 text-xs">{{ $prod->created_at->format('d/m/Y') }}</td>
                     </tr>
                     @endforeach
 
@@ -103,16 +94,16 @@
                         <td class="px-6 py-3 flex items-center gap-3">
                             <img src="{{ $pet->image_url }}" class="h-10 w-10 rounded-full object-cover border border-gray-200">
                             <div>
-                                <div class="font-bold text-gray-900">{{ $pet->name }}</div>
+                                <div class="text-body font-bold text-gray-900">{{ $pet->name }}</div>
                                 <span class="text-[10px] bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded uppercase">Mascota</span>
                             </div>
                         </td>
-                        <td class="px-6 py-3 text-gray-500 text-xs">{{ $pet->breed }} <br> {{ $pet->age }}</td>
+                        <td class="text-body px-6 py-3 text-gray-500 text-xs">{{ $pet->breed }} <br> {{ $pet->age }}</td>
                         <td class="px-6 py-3">
                             @if($pet->is_approved) <span class="text-green-600 font-bold text-xs bg-green-50 px-2 py-1 rounded">Aprobado</span>
                             @else <span class="text-yellow-600 font-bold text-xs bg-yellow-50 px-2 py-1 rounded">Pendiente</span> @endif
                         </td>
-                        <td class="px-6 py-3 text-gray-400 text-xs">{{ $pet->created_at->format('d/m/Y') }}</td>
+                        <td class="text-body px-6 py-3 text-gray-400 text-xs">{{ $pet->created_at->format('d/m/Y') }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -127,19 +118,15 @@
         </div>
     </div>
 
-
-    <!-- ================================================= -->
     <!-- LÓGICA DE GRID PARA SECCIONES INFERIORES -->
-    <!-- ================================================= -->
-    {{-- Si es tienda, Ventas ocupa full width (col-span-2). Si no, comparten espacio. --}}
+
     <div class="grid grid-cols-1 {{ $isStoreOnly ? '' : 'lg:grid-cols-2' }} gap-8">
         
-        <!-- ================================================= -->
         <!-- SECCIÓN 3: VENTAS REALIZADAS -->
-        <!-- ================================================= -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full">
-            <div class="p-4 border-b border-gray-100 bg-blue-50 flex flex-col sm:flex-row justify-between items-center gap-3">
-                <h3 class="font-bold text-gray-700 flex items-center"><i class="fa-solid fa-cash-register mr-2 text-blue-500"></i> Ventas</h3>
+
+        <div class="bg-surface rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full">
+            <div class="bg-surface p-4 border-b border-gray-100 bg-blue-50 flex flex-col sm:flex-row justify-between items-center gap-3">
+                <h3 class="text-body font-bold text-gray-700 flex items-center"><i class="fa-solid fa-cash-register mr-2 text-blue-500"></i> Ventas</h3>
                 
                 <!-- Buscador de Ventas -->
                 <form action="{{ route('publish') }}" method="GET" class="w-full sm:w-auto">
@@ -153,8 +140,8 @@
             
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
-                    <thead class="bg-white text-gray-500 text-xs uppercase border-b border-gray-100">
-                        <tr>
+                    <thead class="bg-surface text-gray-500 text-xs uppercase border-b border-gray-100">
+                        <tr class="text-body">
                             <th class="px-4 py-3">Detalle</th>
                             <th class="px-4 py-3">Comprador</th>
                             <th class="px-4 py-3 text-center">Estado</th>
@@ -164,11 +151,20 @@
                         @forelse($salesHistory as $sale)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-4 py-3">
-                                    <div class="font-bold text-gray-800">{{ $sale->product->name }}</div>
-                                    <div class="text-xs text-gray-400">{{ $sale->created_at->format('d M') }} | S/ {{ number_format($sale->unit_price * $sale->quantity, 2) }}</div>
+                                    <div class="text-body font-bold text-gray-800">{{ $sale->product->name }}</div>
+                                    <div class="text-body text-xs text-gray-400">{{ $sale->created_at->format('d M') }} | S/ {{ number_format($sale->unit_price * $sale->quantity, 2) }}</div>
                                 </td>
-                                <td class="px-4 py-3 text-gray-600 text-xs">
-                                    {{ $sale->order->user->name ?? 'Usuario' }}
+                                <td class="px-4 py-3">
+                                    <div class="font-bold text-gray-800">{{ $sale->order->user->name ?? 'Usuario' }}</div>
+                                    <!-- Datos de contacto añadidos -->
+                                    <div class="flex flex-col text-[11px] text-gray-500 mt-1 space-y-1">
+                                        <a href="https://wa.me/51{{ $sale->order->user->phone }}" target="_blank" class="flex items-center hover:text-green-600 transition">
+                                            <i class="fa-brands fa-whatsapp text-green-500 mr-1.5"></i> {{ $sale->order->user->phone ?? 'Sin número' }}
+                                        </a>
+                                        <span class="flex items-center">
+                                            <i class="fa-solid fa-envelope text-gray-400 mr-1.5"></i> {{ $sale->order->user->email ?? 'Sin correo' }}
+                                        </span>
+                                    </div>
                                 </td>
                                 <td class="px-4 py-3 text-center">
                                     @if($sale->order->status === 'completed' || $sale->order->status === 'shipped')
@@ -197,7 +193,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" class="p-6 text-center text-gray-400 text-xs">Sin ventas recientes.</td></tr>
+                            <tr><td colspan="3" class="text-body p-6 text-center text-gray-400 text-xs">Sin ventas recientes.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -207,13 +203,12 @@
             </div>
         </div>
 
-        <!-- ================================================= -->
         <!-- SECCIÓN 4: FINALES FELICES (ADOPCIONES) -->
-        <!-- ================================================= -->
+
         @if(Auth::user()->role === 'shelter' || Auth::user()->role === 'admin')
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full">
-            <div class="p-4 border-b border-gray-100 bg-pink-50 flex flex-col sm:flex-row justify-between items-center gap-3">
-                <h3 class="font-bold text-gray-700 flex items-center"><i class="fa-solid fa-heart mr-2 text-pink-500"></i> Solicitudes</h3>
+        <div class="bg-surface rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full">
+            <div class="bg-surface p-4 border-b border-gray-100 bg-pink-50 flex flex-col sm:flex-row justify-between items-center gap-3">
+                <h3 class="text-body font-bold text-gray-700 flex items-center"><i class="fa-solid fa-heart mr-2 text-pink-500"></i> Solicitudes</h3>
                 
                 <!-- Buscador de Adopciones -->
                 <form action="{{ route('publish') }}" method="GET" class="w-full sm:w-auto">
@@ -227,8 +222,8 @@
             
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
-                    <thead class="bg-white text-gray-500 text-xs uppercase border-b border-gray-100">
-                        <tr>
+                    <thead class="bg-surface text-gray-500 text-xs uppercase border-b border-gray-100">
+                        <tr class="text-body">
                             <th class="px-4 py-3">Mascota</th>
                             <th class="px-4 py-3">Solicitante</th>
                             <th class="px-4 py-3 text-center">Acción</th>
@@ -240,12 +235,21 @@
                                 <td class="px-4 py-3 flex items-center gap-2">
                                     <img src="{{ $adopt->pet->image_url }}" class="h-8 w-8 rounded-full object-cover border border-gray-200">
                                     <div>
-                                        <div class="font-bold text-gray-800 text-xs">{{ $adopt->pet->name }}</div>
-                                        <div class="text-[10px] text-gray-400">{{ $adopt->created_at->format('d M') }}</div>
+                                        <div class="text-body font-bold text-gray-800 text-xs">{{ $adopt->pet->name }}</div>
+                                        <div class="text-body text-[10px] text-gray-400">{{ $adopt->created_at->format('d M') }}</div>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 text-xs text-gray-600">
-                                    {{ $adopt->user->name }}
+                                <td class="px-4 py-3">
+                                    <div class="font-bold text-gray-800">{{ $adopt->user->name }}</div>
+                                    <!-- Datos de contacto añadidos -->
+                                    <div class="flex flex-col text-[11px] text-gray-500 mt-1 space-y-1">
+                                        <a href="https://wa.me/51{{ $adopt->user->phone }}" target="_blank" class="flex items-center hover:text-green-600 transition">
+                                            <i class="fa-brands fa-whatsapp text-green-500 mr-1.5"></i> {{ $adopt->user->phone ?? 'Sin número' }}
+                                        </a>
+                                        <span class="flex items-center">
+                                            <i class="fa-solid fa-envelope text-gray-400 mr-1.5"></i> {{ $adopt->user->email }}
+                                        </span>
+                                    </div>
                                 </td>
                                 <td class="px-4 py-3 text-center">
                                     @if($adopt->status === 'approved')
@@ -274,7 +278,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" class="p-6 text-center text-gray-400 text-xs">No hay solicitudes pendientes.</td></tr>
+                            <tr><td colspan="3" class="text-body p-6 text-center text-gray-400 text-xs">No hay solicitudes pendientes.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

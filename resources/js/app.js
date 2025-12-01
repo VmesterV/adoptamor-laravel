@@ -67,9 +67,9 @@ function updateCartUI() {
     cart.forEach(item => {
         total += item.price * item.qty;
         // ACTUALIZADO: Usa clases en lugar de style=""
-        html += `<div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg border border-custom transition hover:shadow-sm">
+        html += `<div class="bg-surface flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg border border-custom transition hover:shadow-sm">
             <img src="${item.image}" class="w-14 h-14 object-cover rounded-md border border-custom">
-            <div class="flex-grow min-w-0"><p class="font-bold text-sm truncate text-gray-800 dark:text-gray-200">${item.name}</p><p class="text-xs text-gray-500">S/ ${item.price} x ${item.qty}</p></div>
+            <div class="flex-grow min-w-0"><p class="text-body font-bold text-sm truncate text-gray-800 dark:text-gray-200">${item.name}</p><p class="text-xs text-gray-500">S/ ${item.price} x ${item.qty}</p></div>
             <div class="text-right"><div class="font-bold text-sm mb-1 text-primary">S/ ${(item.price * item.qty).toFixed(2)}</div><button onclick="removeFromCart(${item.id})" class="text-gray-400 hover:text-red-500 transition text-xs"><i class="fa-solid fa-trash-can"></i></button></div></div>`;
     });
     container.innerHTML = html;
@@ -319,4 +319,155 @@ window.applyFilters = function() {
                 window.history.pushState({path: url}, '', url);
             });
     }
+}
+
+window.switchSidebarTab = function(tab) {
+    const vCart = document.getElementById('sidebar-view-cart');
+    const vTrack = document.getElementById('sidebar-view-tracking');
+    const tCart = document.getElementById('tab-cart');
+    const tTrack = document.getElementById('tab-tracking');
+
+    if (tab === 'cart') {
+        vCart.classList.remove('hidden');
+        vTrack.classList.add('hidden');
+        
+        // Estilos Activo/Inactivo
+        tCart.classList.add('border-primary', 'text-gray-800'); 
+        tCart.classList.remove('border-transparent', 'text-gray-400');
+        
+        tTrack.classList.remove('border-primary', 'text-gray-800'); 
+        tTrack.classList.add('border-transparent', 'text-gray-400');
+    } else {
+        vCart.classList.add('hidden');
+        vTrack.classList.remove('hidden');
+        
+        tTrack.classList.add('border-primary', 'text-gray-800'); 
+        tTrack.classList.remove('border-transparent', 'text-gray-400');
+        
+        tCart.classList.remove('border-primary', 'text-gray-800'); 
+        tCart.classList.add('border-transparent', 'text-gray-400');
+        
+        loadTrackingData(); // Cargar datos al cambiar pestaña
+    }
+}
+
+async function loadTrackingData() {
+    const container = document.getElementById('tracking-list');
+    container.innerHTML = '<div class="text-center mt-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-2xl"></i><p class="mt-2 text-xs">Cargando...</p></div>';
+
+    try {
+        const ordersUrl = document.querySelector('meta[name="orders-url"]')?.content;
+        if(!ordersUrl) return; // Seguridad si no hay meta tag
+
+        const response = await fetch(ordersUrl);
+        
+        if (response.status === 401) { // No logueado
+            container.innerHTML = '<div class="text-center mt-10"><p class="text-gray-500 text-sm mb-4">Inicia sesión para ver el historial.</p><button onclick="openModal(\'login-modal\')" class="text-pink-500 font-bold underline">Ingresar</button></div>';
+            return;
+        }
+        
+        const orders = await response.json();
+
+        if (orders.length === 0) {
+            container.innerHTML = '<div class="text-center mt-10 text-gray-400"><i class="fa-solid fa-box-open text-4xl mb-2"></i><p class="text-sm">No tienes pedidos aún.</p></div>';
+            return;
+        }
+
+        let html = '';
+        orders.forEach(order => {
+            // Datos del primer vendedor para la cabecera (simplificado)
+            const firstProduct = order.order_details[0]?.product;
+            const seller = firstProduct?.user;
+            const sellerName = seller?.name || 'AdoptAmor';
+            const sellerPhoto = seller?.photo_url || 'https://ui-avatars.com/api/?name=' + sellerName;
+            
+            // Estado con colores
+            let statusBadge = '';
+            if(order.status === 'pending') statusBadge = '<span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-[10px] font-bold">PENDIENTE</span>';
+            else if(order.status === 'completed') statusBadge = '<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold">ENTREGADO</span>';
+            else if(order.status === 'cancelled') statusBadge = '<span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-[10px] font-bold">CANCELADO</span>';
+
+            // HTML de los detalles (Oculto)
+            let detailsHtml = '';
+            order.order_details.forEach(det => {
+                detailsHtml += `
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100 last:border-0 text-xs">
+                        <div class="text-body text-gray-600 flex items-center gap-2">
+                            <img src="${det.product.image_url}" class="w-6 h-6 rounded object-cover">
+                            ${det.product.name} <span class="text-gray-400">x${det.quantity}</span>
+                        </div>
+                        <div class="text-body font-bold text-gray-800">S/ ${det.unit_price}</div>
+                    </div>
+                `;
+            });
+
+            // Tarjeta Principal
+            html += `
+                <div class="bg-white rounded-xl shadow-sm border border-custom overflow-hidden mb-3 transition hover:shadow-md">
+                    <!-- Cabecera Acordeón (Clickable) -->
+                    <div class="flex-grow overflow-y-auto p-4 space-y-4 bg-surface" onclick="toggleOrderDetails(${order.id})">
+                        
+                        <!-- Fila 1: Foto y Nombre Tienda -->
+                        <div class="flex items-center gap-3 mb-2 pb-2 border-b border-gray-50">
+                            <img src="${sellerPhoto}" class="w-8 h-8 rounded-full border border-gray-200 object-cover">
+                            <div>
+                                <p class="text-body font-bold text-sm text-gray-800 leading-none">${sellerName}</p>
+                                <p class="text-body text-[10px] text-gray-400">Pedido #${String(order.id).padStart(6, '0')}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Fila 2: Total y Estado -->
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-[10px] text-gray-400 uppercase font-bold">Total</span>
+                                <span class="font-extrabold text-pink-500 text-sm ml-1">S/ ${order.total}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                ${statusBadge}
+                                <i id="arrow-${order.id}" class="fa-solid fa-chevron-down text-gray-400 text-xs transition-transform duration-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuerpo Desplegable -->
+                    <div id="details-${order.id}" class="hidden flex-grow overflow-y-auto p-4 space-y-4 bg-surface transition-all">
+                        ${detailsHtml}
+                        <div class="text-right mt-2 pt-2 border-t border-gray-200">
+                            <span class="text-body text-[10px] text-gray-400 italic">Fecha: ${new Date(order.created_at).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+
+    } catch (error) {
+        console.error(error);
+        container.innerHTML = '<p class="text-center text-red-400 text-sm mt-10">Error al cargar datos.</p>';
+    }
+}
+
+window.toggleOrderDetails = function(id) {
+    const content = document.getElementById(`details-${id}`);
+    const arrow = document.getElementById(`arrow-${id}`);
+    
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        arrow.classList.add('rotate-180');
+    } else {
+        content.classList.add('hidden');
+        arrow.classList.remove('rotate-180');
+    }
+}
+
+// Actualizar toggleCart para que siempre abra en la pestaña de carrito por defecto (opcional)
+// Busca tu función toggleCart existente y modifícala así:
+const oldToggleCart = window.toggleCart;
+window.toggleCart = function() {
+    const sidebar = document.getElementById('cart-sidebar');
+    // Si se está abriendo (estaba cerrado)
+    if (sidebar.classList.contains('translate-x-full')) {
+        switchSidebarTab('cart'); // Forzar vista carrito al abrir
+    }
+    oldToggleCart(); // Llamar a la lógica original de abrir/cerrar
 }

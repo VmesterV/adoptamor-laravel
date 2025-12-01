@@ -84,13 +84,23 @@
 
                 <div class="border-t border-custom pt-6">
                     <h4 class="text-xs font-bold text-body opacity-50 uppercase tracking-wider mb-4">Publicado por</h4>
-                    <div class="flex items-center gap-4">
-                        <img src="{{ $pet->user->photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode($pet->user->name) }}" class="w-12 h-12 rounded-full object-cover border border-custom">
-                        <div>
-                            <p class="font-bold text-body">{{ $pet->user->name }}</p>
-                            <p class="text-xs text-body opacity-60">{{ $pet->user->address ?? 'Dirección no pública' }}</p>
-                        </div>
-                    </div>
+                    <a href="https://wa.me/51{{ $pet->user->phone }}?text=Hola {{ $pet->user->name }}, estoy interesado en la mascota {{ $pet->name }}." 
+                        target="_blank" 
+                        class="flex items-center gap-4 group p-2 rounded-xl hover:bg-green-50 dark:hover:bg-green-900/20 transition cursor-pointer border border-transparent hover:border-green-200">
+                        
+                            <div class="relative">
+                                <img src="{{ $pet->user->photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode($pet->user->name) }}" class="w-12 h-12 rounded-full object-cover border border-gray-200">
+                                <div class="absolute -bottom-1 -right-1 bg-green-500 text-white rounded-full p-1 text-[10px] border-2 border-white">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <p class="font-bold text-gray-900 text-body group-hover:text-green-600 transition">{{ $pet->user->name }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $pet->user->address }}</p>
+                                <p class="text-[10px] text-green-500 font-bold mt-1">Clic para mas información de la mascota</p>
+                            </div>
+                        </a>
                 </div>
 
                 <div class="mt-8">

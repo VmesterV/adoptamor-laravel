@@ -51,6 +51,8 @@ class AuthController extends Controller
             'province' => 'required_if:role,shelter,store',
             'district' => 'required_if:role,shelter,store',
             'address' => 'required_if:role,shelter,store',
+            'phone'      => 'required|numeric|digits_between:9,15', // Obligatorio para todos
+           'photo_url'  => 'nullable|url', // Opcional, para el logo/foto perfil
         ]);
 
         // 2. Crear el usuario
@@ -65,7 +67,8 @@ class AuthController extends Controller
             'district' => $request->role !== 'person' ? $request->district : null,
             'address' => $request->role !== 'person' ? $request->address : null,
             // Foto por defecto (avatar generado)
-            'photo_url' => null, 
+            'phone' => $request->phone,
+            'photo_url' => $request->photo_url, 
         ]);
 
         // 3. Iniciar sesión automáticamente
