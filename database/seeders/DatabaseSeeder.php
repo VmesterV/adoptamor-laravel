@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         // ADMIN (Para entrar al Dashboard)
         $admin = User::create([
             'name' => 'Admin Principal',
-            'email' => 'admin@adoptamor.pe',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'admin',
         ]);
@@ -25,32 +25,32 @@ class DatabaseSeeder extends Seeder
         // REFUGIO (Para tener mascotas)
         $shelter = User::create([
             'name' => 'Refugio Patitas Felices',
-            'email' => 'refugio@patitas.pe',
+            'email' => 'refugio@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'shelter',
-            'department' => 'Lima',
-            'province' => 'Lima',
-            'district' => 'Miraflores',
-            'address' => 'Av. Larco 123',
+            'department' => 'Cusco',
+            'province' => 'Cusco',
+            'district' => 'Cusco',
+            'address' => 'Av. Santiango 123',
             'photo_url' => 'https://cdn-icons-png.flaticon.com/512/3448/3448616.png'
         ]);
 
         // TIENDA (Para tener productos)
         $store = User::create([
             'name' => 'Super PetShop',
-            'email' => 'ventas@petshop.pe',
+            'email' => 'ventas@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'store',
-            'department' => 'Arequipa',
-            'province' => 'Arequipa',
-            'district' => 'Yanahuara',
+            'department' => 'Cusco',
+            'province' => 'Cusco',
+            'district' => 'Cusco',
             'photo_url' => 'https://cdn-icons-png.flaticon.com/512/1198/1198368.png'
         ]);
 
         // PERSONA (Para probar compras/adopción)
         User::create([
-            'name' => 'Juan Pérez',
-            'email' => 'juan@gmail.com',
+            'name' => 'Alexander',
+            'email' => 'alex@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'person',
         ]);
@@ -108,7 +108,7 @@ class DatabaseSeeder extends Seeder
             'description' => 'Alimento balanceado para perros adultos de todas las razas.',
             'price' => 145.50,
             'stock' => 20,
-            'image_url' => 'https://images.unsplash.com/photo-1589924691195-41432c84c1e7?auto=format&fit=crop&w=600&q=80',
+            'image_url' => 'https://i.postimg.cc/TY0SdSC7/COMIDA-PARA-PERRO.webp',
             'is_active' => true,
             'is_approved' => true, // APROBADO
             'published_at' => now(),
