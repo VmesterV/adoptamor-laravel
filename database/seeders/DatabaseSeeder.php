@@ -26,25 +26,27 @@ class DatabaseSeeder extends Seeder
         $shelter = User::create([
             'name' => 'Refugio Patitas Felices',
             'email' => 'refugio@gmail.com',
+            'phone' => '902932988',
             'password' => Hash::make('12345678'),
             'role' => 'shelter',
             'department' => 'Cusco',
             'province' => 'Cusco',
             'district' => 'Cusco',
             'address' => 'Av. Santiango 123',
-            'photo_url' => 'https://cdn-icons-png.flaticon.com/512/3448/3448616.png'
+            'photo_url' => 'https://cdn-icons-png.flaticon.com/512/3448/3448616.png',
         ]);
 
         // TIENDA (Para tener productos)
         $store = User::create([
             'name' => 'Super PetShop',
             'email' => 'ventas@gmail.com',
+            'phone' => '902932988',
             'password' => Hash::make('12345678'),
             'role' => 'store',
             'department' => 'Cusco',
             'province' => 'Cusco',
             'district' => 'Cusco',
-            'photo_url' => 'https://cdn-icons-png.flaticon.com/512/1198/1198368.png'
+            'photo_url' => 'https://cdn-icons-png.flaticon.com/512/1198/1198368.png',
         ]);
 
         // PERSONA (Para probar compras/adopción)
@@ -53,6 +55,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'alex@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'person',
+            'phone' => '969394421',
         ]);
 
         // 2. MASCOTAS (PETS)
